@@ -1,0 +1,22 @@
+<html lang="zh-CN">
+<head>
+
+</head>
+<body>
+<div id="main">
+	<p id = "anchor" onclick="socket.emit('my event',{})"> hi </p>
+</div>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+			        	socket.emit('my event', {data: 'I\'m connected!'});
+				    });
+
+socket.on('my response',function(msg) {alert(msg)} 
+</script>
+
+
+</body>
+</html>
