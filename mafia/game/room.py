@@ -29,6 +29,11 @@ class Room:
         self.players.add(player)
         player.room = self
 
+    def broadcast_in_room(self,message):
+        for p in self.players:
+            if p.socket is not None:
+                p.socket.send_packet(message)
+
 if __name__=='__main__':
     a = Room(name='new room!', password='***')
     p = Player(nickname='p1',socket=None)

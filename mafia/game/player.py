@@ -2,10 +2,16 @@
 
 class Player:
     nickname = ''
-    __socket = None
+    member = None
+    token = None
+    socket = None
     room = None
     def __init__(self,*args,**kwargs):
-        self.__socket = kwargs.pop('socket')
+        self.socket = kwargs.pop('socket')
+        self.nickname = kwargs.pop('nickname')
+        self.member = kwargs.pop('member')
+        self.token = kwargs.pop('token')
+        self.room = None
         pass
     def re_connected(self,*args,**kwargs):
         pass

@@ -5,3 +5,4 @@ ENV/
 *.swp
 .DS_Store
 .DS_Store/
+app.db

@@ -5,6 +5,7 @@ from player import Player
 class Server:
     rooms=set()
     players=set()
+    game_tokens=dict()
 
     def __init__(self,*args,**kwargs):
         self.name = kwargs.pop('name')
@@ -24,6 +25,9 @@ class Server:
     def delete_room(self,target_room):
         if target_room not in self.rooms:
             raise Exception('no such room')
+
+        for player in target_room.players:
+            player.room = None
 
         self.rooms.remove(target_room)
 
@@ -46,7 +50,8 @@ class Server:
 #test
 if __name__=='__main__':
     server = Server(name='kd')
-    r1 = server.create_room(Room(name='hello'))
+    r1 = Room(name='hi')
+    server.create_room(r1)
     server.create_room(Room(name='hello1'))
     server.create_room(Room(name='hello2'))
     server.create_room(Room(name='hello3'))
@@ -56,9 +61,6 @@ if __name__=='__main__':
     for i in server.room_list():
         print i.name
 
-    del_list = [i for i in server.room_list()]
-    #for i in del_list:
-    #    server.delete_room(i)
 
  
     plyer = Player(name='1',socket=None)
@@ -68,4 +70,8 @@ if __name__=='__main__':
     for i in server.room_list():
         print i.name
 
-   
+    del_list = [i for i in server.room_list()]
+    for i in del_list:
+        server.delete_room(i)
+
+

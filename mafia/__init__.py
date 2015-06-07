@@ -1,5 +1,6 @@
 from app import app
 
 import views
-import sio
+import game_sockets
 
+import debugs

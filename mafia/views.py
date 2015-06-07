@@ -1,51 +1,72 @@
 from app import app
 from app import skt
-from flask import render_template, Response, request ,session, make_response
-import socketio
-from socketio import socketio_manage
-from socketio import gevent
-from sio import MafiaNameSpace
-import json
-import copy
+from app import db
+#App Manipulate stub
+import member_service
+import game_service
+
+from flask import render_template, Response, request ,session, make_response, jsonify,redirect,url_for,abort
+
+
+
 
 @app.route("/")
 def index():
-    for i in skt.sockets.iteritems():
-        print i
-    resp = make_response(render_template("index.html"))
-    resp.set_cookie('userid','^!@Dfqwi')
+    gameuser = request.cookies.get('gameuser')
+    if gameuser is not None:
+        pass
+        
+    resp = render_template("index.html")
     return resp
 
-@app.route('/boardcast')
-def bc():
 
-    pkt = dict(type='event',
-            name='my response',
-            args='cool',
-            endpoint='/chat')
-
-    for sess,socket in skt.sockets.iteritems():
-        #socket.emit('my response','hi theeere!')
-        socket.send_packet(pkt)
-        print sess,socket
-    return "well?"
-
-@app.route('/socket.io/<path:remaining>')
-def socketio(remaining):
+@app.route("/login",methods=['POST'])
+def login():
+    username=request.form.get('username')
+    password=request.form.get('password')
+    if None in [username,password]:
+        return jsonify( {'result':'Wrong Params'} )
+    
     try:
-        socketio_manage(request.environ, {'/chat': MafiaNameSpace}, request=request._get_current_object())
-    except:
-        app.logger.error("Exception while handling socketio connection",
-                         exc_info=True)
-    return Response()
+        member_service.login(username,password)
+    except Exception,e:
+        abort(401)
+    #ok.then.
 
-def infinite():
-    for i in range(0,10):
-        gevent.sleep(1)
-        print("awake!")
+    resp = make_response(jsonify({'status':True}))
+    #resp = make_response('hi')
+    ### set user to game server
+    
+    resp.set_cookie('gameuser',username)
+    resp.set_cookie('gametoken','FLSKF:I@#*RY*@Y*YR)B')
+    return resp
+    
 
-@app.route('/gspawn')
-def gspawn():
-    gevent.spawn(infinite)
-    return "spawnedd"
+@app.route("/register",methods=['POST'])
+def register():
+    username = request.form.get('username')
+    nickname = request.form.get('nickname')
+    password = request.form.get('password')
+    if None in [username,nickname,password]:
+        abort(401)
+    try:
+        member_service.register(username=username,nickname=nickname,password=password)
+    except Exception,e:
+        abort(401)
+    return redirect('index')
 
+#Socket IO Interface
+
+#from socketio import socketio_manage
+#from game_sockets import GameConnection
+#@app.route('/socket.io/<path:remaining>')
+#def socketio(remaining):
+#    try:
+#        socketio_manage(request.environ, {'/chat': GameConnection}, request=request._get_current_object())
+#    except:
+#        app.logger.error("Exception while handling socketio connection",
+#                         exc_info=True)
+#    return Response()
+#
+#
+##@app.route('/login')

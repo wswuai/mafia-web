@@ -1,18 +1,31 @@
 import flask
+from flask.ext.sqlalchemy import SQLAlchemy
+import os
 import game
 import gevent
 from socketio.server import SocketIOServer
 import json
 
-app = flask.Flask(__name__)
 PORT = 8000
-app.debug=True
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
+SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+
+app = flask.Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_MIGRATE_REPO'] = SQLALCHEMY_MIGRATE_REPO
+db = SQLAlchemy(app)
 skt = SocketIOServer(('0.0.0.0', PORT), app, resource="socket.io")
+game_server = game.Server(name='kingdee')
+######Referenced by other module
+
+app.debug=True
 skt.debug=True
 
-game_server = game.server(name='kingdee')
 
 
+#demo code
 def boardcast():
     while(True):
 
@@ -27,7 +40,6 @@ def boardcast():
 
         for sessid, socket in skt.sockets.iteritems():
             socket.send_packet(pkt)
-            #socket['/chat'].emit('my response','hi?')
         gevent.sleep(1)
 
 
