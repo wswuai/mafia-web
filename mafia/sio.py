@@ -1,9 +1,19 @@
 from app import app
-from flask_socketio import SocketIO, emit , send
 
-socketio = SocketIO(app)
+from socketio.namespace import BaseNamespace
 
-@socketio.on('my event')
-def test_sio(message):
-    print message
-    emit("my response","oh, hi!, nice to meet you!")
+
+
+class MafiaNameSpace(BaseNamespace):
+    def on_my_event(self,msg):
+        #print self.socket
+        #self.request << get session stuff.
+        self.emit('my response', str(self.request.cookies))
+        pass
+
+    def on_login_req(self,msg):
+        pass
+
+    def on_room_list(self,msg):
+        pass
+
