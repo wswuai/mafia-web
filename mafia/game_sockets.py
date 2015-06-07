@@ -5,6 +5,7 @@ from socketio.namespace import BaseNamespace
 from socketio import socketio_manage
 
 from flask import Response,request
+
 @app.route('/socket.io/<path:remaining>')
 def socketio(remaining):
     try:

@@ -35,10 +35,17 @@ def login():
 
     resp = make_response(jsonify({'status':True}))
     #resp = make_response('hi')
-    ### set user to game server
+
+    ### checkin user to game server
+
     
     resp.set_cookie('gameuser',username)
-    resp.set_cookie('gametoken','FLSKF:I@#*RY*@Y*YR)B')
+    import hashlib
+    import time
+    tok = hashlib.sha1(str(time.time())).hexdigest()
+    resp.set_cookie('gametoken',tok)
+
+    game_service.game_checkin(username,tok)
     return resp
     
 
@@ -54,19 +61,3 @@ def register():
     except Exception,e:
         abort(401)
     return redirect('index')
-
-#Socket IO Interface
-
-#from socketio import socketio_manage
-#from game_sockets import GameConnection
-#@app.route('/socket.io/<path:remaining>')
-#def socketio(remaining):
-#    try:
-#        socketio_manage(request.environ, {'/chat': GameConnection}, request=request._get_current_object())
-#    except:
-#        app.logger.error("Exception while handling socketio connection",
-#                         exc_info=True)
-#    return Response()
-#
-#
-##@app.route('/login')
