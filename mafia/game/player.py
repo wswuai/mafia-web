@@ -11,10 +11,16 @@ class Player:
         self.member = kwargs.pop('member')
         self.room = None
         pass
-    def re_connected(self,*args,**kwargs):
-        pass
-    def leave_room(self):
-        self.room.player_leave_room(self)
+    def __dict__(self):
+        sstr = {}
+        sstr['member'] = self.member.__dict__
+        sstr['socket'] = str(self.socket)
+        sstr['room'] = self.room.name
+        return sstr
+    #def re_connected(self,*args,**kwargs):
+    #    pass
+    #def leave_room(self):
+    #    self.room.player_leave_room(self)
 
     def __str__(self):
         return "<PLAYER : nickname=%s, member=%s, socket=%s, room=%s>" % (self.nickname,self.member,self.socket,self.room)

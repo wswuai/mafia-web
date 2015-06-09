@@ -5,8 +5,15 @@
 <body>
 <div id="main">
     <div class="container">
-        <p id = "anchor" onclick="socket.emit('req room list',{})"> hi </p>
-        <p id = "anchor" onclick="socket.emit('req login',{})"> login! </p>
+        <div class="row">
+            <div class="col-md-3">
+                <button  id = "anchor" class="btn btn-success" onclick="$.post(url='/login',data={username:'xiaogo',password:'123'})"> checkin </button >
+                <button  id = "anchor" class="btn btn-success" onclick="socket.emit('req room list',{})"> room list </button >
+                <button id = "anchor" class="btn btn-success" onclick="socket.emit('req login',{})"> login! </button>
+                <button id = "anchor" class="btn btn-success" onclick="socket.emit('req create room',{roomname:'hello'})"> create room </button>
+                <button id = "anchor" class="btn btn-success" onclick="socket.emit('req leave room',{roomname:'hello'})"> leave room </button>
+            </div>
+        </div>
         <p>msg:</p>
         <p >current:</p>
         <p id = "pp">xxx</p>
@@ -32,8 +39,18 @@
 
 
 function debug_message(msg){
-    $("#restable tbody tr:last").after("<tr><th>msg:</th><th>"+msg.toString()+"</th></tr>");
+    msg = JSON.stringify(msg);
+    $("#pp").html(msg)
+    $("#restable tbody tr:last").after("<tr><th>msg:</th><th>"+msg+"</th></tr>");
 
+}
+
+function extract_data(msg){
+    //var dat = $.parseJSON(msg)
+    for (var i in msg){
+    $("#restable tbody tr:last").after("<tr><th>room list:</th><th>"+msg[0].name+"</th></tr>");
+
+}
 }
 
 var socket = io.connect('/game');
@@ -41,9 +58,11 @@ socket.on('connect', function() {
         socket.emit('req room list', {data: ''});
         });
 
-socket.on('resp room list',debug_message);
+socket.on('resp room list',extract_data);
 
 socket.on('connection rejected', debug_message);
+
+socket.on('resp login', debug_message);
 
 </script>
 
