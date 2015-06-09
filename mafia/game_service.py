@@ -3,7 +3,6 @@ from app import skt
 
 from game import Player
 
-import member_service
 from models import Member
 
 
@@ -18,7 +17,6 @@ def game_login(gameuser,socket):
             return
 
     #not online
-    print ('user not online, try to get online')
     member = Member.query.filter_by(username=gameuser).first()
     nickname = member.nickname
     plyer = Player(member=member,nickname=nickname,socket=socket)

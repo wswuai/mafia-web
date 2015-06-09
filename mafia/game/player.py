@@ -15,3 +15,6 @@ class Player:
         pass
     def leave_room(self):
         self.room.player_leave_room(self)
+
+    def __str__(self):
+        return "<PLAYER : nickname=%s, member=%s, socket=%s, room=%s>" % (self.nickname,self.member,self.socket,self.room)

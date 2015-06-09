@@ -32,16 +32,29 @@ def needs_game_checkin(func):
             self.emit('connection rejected','token expired, re login!')
     return wrapper
 
+#decorator ---- CRASH PROTECTOR
+def crash_protect(func):
+    def wrapper(self,*args,**kwargs):
+        try:
+            func(self,*args,**kwargs)
+        except Exception,e:
+            self.emit('error',str(e))
+            print(e)
+    return wrapper
 #socket io views: --- /game
 class GameConnection(BaseNamespace):
     @needs_game_checkin
+    @crash_protect
     def on_req_login(self,msg):
+        1/0
         game_service.game_login(gameuser=self.request.cookies['gameuser'],
                                 socket=self.socket)
+        self.emit('resp login',{'acknowlege':True})
         pass
 
 
     @needs_game_checkin
+    @crash_protect
     def on_req_room_list(self,msg):
         print("on room list")
         self.emit('resp room list', [i for i in game_server.rooms])
