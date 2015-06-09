@@ -36,10 +36,10 @@ def needs_game_checkin(func):
 #socket io views: --- /game
 class GameConnection(BaseNamespace):
     #decorator ----  if donot implement, crash will close socket.
-    def exception_handler_decorator(func):
-        def wrapper(self,*args,**kwargs):
+    def exception_handler_decorator(self,func):
+        def wrapper(*args,**kwargs):
             try:
-                func(self,*args,**kwargs)
+                func(*args,**kwargs)
             except Exception,e:
                 self.emit('error',str(e))
                 print(e)
