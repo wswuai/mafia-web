@@ -1,0 +1,106 @@
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<title>The Demo</title>
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!-- Bootstrap -->
+</head>
+<body>
+<style>
+
+em { color: orange;
+	font-style: normal;}
+</style>
+
+<div class="container">
+	<div class="container">
+		<h1><a href="{{ url_for("index") }}">随手社区搜索DEMO </a></h1>
+	</div>
+	<div class="col-lg-12">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="Search for..." id = "inp">
+			<span class="input-group-btn">
+				<button class="btn btn-success" type="button" id="searchPage">Go!</button>
+			</span>
+		</div>
+		<!-- /input-group -->
+		<!--			<input style="width:25%" class="form-control" type="text" id="inp" value="{{ context.query }}" /> 
+					<span class="help-block">搜索结果尚未优化，仅供demo</span> 
+					<button  type = "button" class="btn btn-success hidden" id="searchAjax" >搜索(ajax)</button>
+					<input  type = "button" class="btn btn-warning" id="searchPage" value="search"></input>
+-->
+		<table class="table table-hover" id = 'restable'>
+			<thead>
+				<tr>
+					<th> 搜索结果 : 用时{{ context.timetook*0.001 }}s, 共{{ context.mount }}条结果. </th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for row in context.resList %}
+			<tr>
+				<td> 
+					<a href="{{ row.url }}">{{ row.subject|safe }}</a>
+					<p>{{ row.content|safe }}</p> 
+					<small>回贴：{{ row.replies }}</small>
+					<small>浏览：{{ row.views }}</small>
+				</td>
+			</tr>
+			{% endfor %}
+			</tbody> 
+		</table>
+		<nav>
+			<ul class="pagination">
+				<li>
+				<a href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+				</li>
+				{% for i in range(1,context.page+10) %}
+				{% if i != context.page %}
+				<li><a href="/result/{{ context.query }}?page={{i}}">{{ i }}</a></li>
+				{% else %}
+				<li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
+				{% endif %}
+				{% endfor %}
+
+				<li>
+				<a href="/result/{{ context.query}}?page={{context.page +1 }}" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+				</li>
+			</ul>
+		</nav>    
+	</div>
+	<small> Powered By myg0u . 2015 </small>
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script>
+$(document).ready(function(){
+		$("#searchPage").click(searchjump);
+		$("#inp").keydown( function(e){
+			if (13==e.keyCode) {
+				searchjump();
+			}
+			});
+		t = $("#inp").val()
+		$("#inp").focus().val(t);
+		$("#searchPage").click( searchjump); } );
+
+
+function searchjump() {
+	window.location.href = '/result/' + $("#inp").val();
+}
+
+
+
+
+	</script>
+
+
+	</body>
+	</html>

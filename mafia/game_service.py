@@ -30,6 +30,9 @@ def game_login(gameuser,gametoken,socket):
     plyer = Player(member=member,nickname=nickname,token=token)
     game_server.player_login(plyer)
     print ('user  online :' + member.username)
+    return plyer
 
+#important operation. be cautious to call.
 def game_checkin(gameuser,gametoken):
     game_server.game_tokens[gameuser]=gametoken
+

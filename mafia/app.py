@@ -28,15 +28,12 @@ skt.debug=True
 #demo code
 def boardcast():
     while(True):
-
+	print("Heartbeats send")
         socketlis = [str(i) for i in skt.sockets.iteritems()]
-
-        pkt = dict(type='event',
-                name='my response',
-                args=[json.dumps(socketlis)],
+        pkt = dict(type='heartbeat',#event
+                #name='my response',
+                #args=None,
                 endpoint='/chat')
-
-        print 'gcnt=' + str(global_cnt)
 
         for sessid, socket in skt.sockets.iteritems():
             socket.send_packet(pkt)

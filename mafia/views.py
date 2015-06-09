@@ -1,4 +1,5 @@
 from app import app
+from app import game_server
 from app import skt
 from app import db
 #App Manipulate stub
@@ -30,7 +31,7 @@ def login():
     try:
         member_service.login(username,password)
     except Exception,e:
-        abort(401)
+        abort(400,e)
     #ok.then.
 
     resp = make_response(jsonify({'status':True}))
@@ -55,9 +56,17 @@ def register():
     nickname = request.form.get('nickname')
     password = request.form.get('password')
     if None in [username,nickname,password]:
-        abort(401)
+        abort(400,'error parameter')
     try:
         member_service.register(username=username,nickname=nickname,password=password)
     except Exception,e:
-        abort(401)
+        abort(400,e)
     return redirect('index')
+
+@app.route("/memberlist")
+def member():
+    page = "<h1> member list<h1>"
+    for (usr,tok) in game_server.game_tokens.iteritems():
+        page += "</br>"
+        page += str(usr) + ":" + str(tok)
+    return page
