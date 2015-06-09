@@ -16,7 +16,7 @@ def index():
     gameuser = request.cookies.get('gameuser')
     if gameuser is not None:
         pass
-        
+
     resp = render_template("index.html")
     return resp
 
@@ -27,7 +27,7 @@ def login():
     password=request.form.get('password')
     if None in [username,password]:
         return jsonify( {'result':'Wrong Params'} )
-    
+
     try:
         member_service.login(username,password)
     except Exception,e:
@@ -39,7 +39,7 @@ def login():
 
     ### checkin user to game server
 
-    
+
     resp.set_cookie('gameuser',username)
     import hashlib
     import time
@@ -48,7 +48,7 @@ def login():
 
     game_service.game_checkin(username,tok)
     return resp
-    
+
 
 @app.route("/register",methods=['POST'])
 def register():

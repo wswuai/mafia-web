@@ -1,10 +1,10 @@
-class Config(object): 
+class Config(object):
     ELASTICSEARCH_SERVER = ['192.168.6.24']
-    DEBUG = False  
-    TESTING = False  
+    DEBUG = False
+    TESTING = False
 
-class DevelopmentConfig(Config):  
+class DevelopmentConfig(Config):
     DEBUG = False
 
-class TestingConfig(Config):  
+class TestingConfig(Config):
     DEBUG = True

@@ -21,7 +21,7 @@ def game_login(gameuser,gametoken,socket):
             g.socket = socket
             print('socket switch, username = ' + gameuser)
             return
-    
+
     #not online
     print ('user not online, try to get online')
     member = Member.query.filter_by(username=gameuser)
