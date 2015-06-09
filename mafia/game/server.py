@@ -10,7 +10,6 @@ class Server:
     def __init__(self,*args,**kwargs):
         self.name = kwargs.pop('name')
         print 'game server is start, name=' + self.name
-        self.players = kwargs.pop('players',[])
 
     def create_room(self,new_room):
         #assert terms:
@@ -38,12 +37,12 @@ class Server:
         #limit terms:
         if target_room not in self.rooms:
             raise Exception('room do not exists')
-        
+
         #processing:
         target_room.enter(player)
 
     def player_login(self,player):
-        self.player.add(player)
+        self.players.add(player)
 
 
 
@@ -62,7 +61,7 @@ if __name__=='__main__':
         print i.name
 
 
- 
+
     plyer = Player(name='1',socket=None)
     server.player_enter_room(plyer,r1)
 

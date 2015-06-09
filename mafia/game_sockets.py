@@ -1,5 +1,6 @@
 from app import app
 from app import game_server
+import game_service
 
 from socketio.namespace import BaseNamespace
 from socketio import socketio_manage
@@ -25,7 +26,7 @@ def needs_game_checkin(func):
         gameuser = self.request.cookies.get('gameuser')
         gametoken = self.request.cookies.get('gametoken')
         tok = game_server.game_tokens.get(gameuser)
-        if(tok == gametoken ):
+        if(tok == gametoken and tok is not None and gameuser is not None):
             func(self,*args,**kwargs)
         else:
             self.emit('connection rejected','token expired, re login!')
@@ -34,14 +35,13 @@ def needs_game_checkin(func):
 #socket io views: --- /game
 class GameConnection(BaseNamespace):
     @needs_game_checkin
-    def on_login_req(self,msg):
+    def on_req_login(self,msg):
+        game_service.game_login(gameuser=self.request.cookies['gameuser'],
+                                socket=self.socket)
         pass
 
 
     @needs_game_checkin
     def on_req_room_list(self,msg):
-	print("on room list")
+        print("on room list")
         self.emit('resp room list', [i for i in game_server.rooms])
-    #def recv_connect(self):
-    #    print("soneone connected!")
-    #    print(self.request.cookies)

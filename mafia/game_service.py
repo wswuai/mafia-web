@@ -7,27 +7,21 @@ import member_service
 from models import Member
 
 
-def game_login(gameuser,gametoken,socket):
-    #validate
-    tok = game_server.game_tokens.get(gameuser)
-    if tok is None or gametoken != tok:
-        raise Exception('game login failed: Token donot fit')
-
+def game_login(gameuser,socket):
     #switch socket
     for g in game_server.players:
         if g.member.username == gameuser:
             #this player is online.
             #switch connection
             g.socket = socket
-            print('socket switch, username = ' + gameuser)
+            print('socket switch, username = ' + gameuser + 'socket = '+str(g.socket))
             return
 
     #not online
     print ('user not online, try to get online')
-    member = Member.query.filter_by(username=gameuser)
+    member = Member.query.filter_by(username=gameuser).first()
     nickname = member.nickname
-    token = gametoken
-    plyer = Player(member=member,nickname=nickname,token=token)
+    plyer = Player(member=member,nickname=nickname,socket=socket)
     game_server.player_login(plyer)
     print ('user  online :' + member.username)
     return plyer
